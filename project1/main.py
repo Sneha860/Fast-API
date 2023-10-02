@@ -39,11 +39,11 @@ def register_user(user: UserRegistration):
     # creating the table in postgreSQL db
     cursor_postgres.execute("CREATE TABLE IF NOT EXISTS users(user_id VARCHAR, full_name VARCHAR, email VARCHAR, password VARCHAR, phone VARCHAR)")
    
-    # Check if email or phone already exist in PostgreSQL
-    cursor_postgres.execute("SELECT * FROM users WHERE email = %s OR phone = %s;", (user.email, user.phone))
+    # Check if email exists in PostgreSQL
+    cursor_postgres.execute("SELECT * FROM users WHERE email = %s;", (user.email))
     existing_user = cursor_postgres.fetchone()
     if existing_user:
-        raise HTTPException(status_code=400, detail="User with email or phone already exists")
+        raise HTTPException(status_code=400, detail="User with email is already exists")
 
     # Insert user details into PostgreSQL Users table with the generated user_id
     cursor_postgres.execute(
